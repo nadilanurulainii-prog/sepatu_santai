@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLEVA | Interactive Footwear Store & Algo Inspector</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f8f5;
+  --ink: #111a16;
+  --ink-light: #48544d;
+  --muted: #78857d;
+  --green: #d8f078;
+  --green-hover: #c4dc62;
+  --dark-green: #1d2823;
+  --line: #e2e8e0;
+  --card: #ffffff;
+  --danger: #ef4444;
+  --shadow: 0 12px 32px -8px rgba(17, 26, 22, 0.08);
+}
+
+body.dark-mode {
+  --bg: #121815;
+  --ink: #f0f4f1;
+  --ink-light: #b0beb5;
+  --muted: #809085;
+  --dark-green: #0a110e;
+  --line: #2a3830;
+  --card: #1a241f;
+  --shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.5;
+  padding-bottom: 60px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Header */
+header {
+  background: var(--dark-green);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.logo {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: #fff;
+  text-decoration: none;
+}
+.logo span { color: var(--green); }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-toggle {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.2); }
+
+.cart-btn {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+.cart-btn:hover { background: rgba(255,255,255,0.2); }
+.cart-count {
+  background: var(--green);
+  color: #1d2823;
+  font-size: 12px;
+  font-weight: 800;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Flash Sale Banner */
+.flash-sale-banner {
+  background: #ef4444;
+  color: white;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.timer-badge {
+  background: rgba(0,0,0,0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--green);
+}
+
+/* Main Layout */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, var(--dark-green) 0%, #2c3e37 100%);
+  color: white;
+  border-radius: 24px;
+  padding: clamp(32px, 5vw, 48px);
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 32px;
+  align-items: center;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.hero-tag {
+  background: rgba(216, 240, 120, 0.15);
+  color: var(--green);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 16px;
+  border: 1px solid rgba(216, 240, 120, 0.3);
+}
+.hero h1 {
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 14px;
+}
+.hero h1 span { color: var(--green); }
+.hero p {
+  color: #a3b8ac;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.hero-img {
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  height: 220px;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.3);
+  transform: rotate(-3deg);
+}
+
+/* Controls Card */
+.controls-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.search-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  min-width: 280px;
+}
+.search-box input, .form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 13px;
+  outline: none;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: inherit;
+}
+.search-box input:focus, .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--green);
+}
+
+/* Filter Pills */
+.category-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pill-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pill-btn.active, .pill-btn:hover {
+  background: var(--dark-green);
+  color: white;
+  border-color: var(--dark-green);
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary { background: var(--dark-green); color: white; border: 1px solid var(--line); }
+.btn-primary:hover { background: #2a3b34; }
+.btn-accent { background: var(--green); color: #1d2823; }
+.btn-accent:hover { background: var(--green-hover); }
+.btn-secondary { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+.btn-secondary:hover { opacity: 0.8; }
+
+/* Products Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.product-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.product-card:hover { transform: translateY(-5px); }
+.product-img-wrap {
+  width: 100%;
+  height: 190px;
+  background: #f2f5f0;
+  position: relative;
+  overflow: hidden;
+}
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.wishlist-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.wishlist-btn:hover { transform: scale(1.15); }
+.wishlist-btn.active { background: #fee2e2; }
+
+.product-code {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: rgba(17, 26, 22, 0.85);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 16px;
+  font-size: 10px;
+  font-weight: 700;
+}
+.stock-badge {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.product-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.product-category { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 800; }
+.product-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.product-price { font-size: 17px; font-weight: 800; color: var(--green); margin-bottom: 10px; }
+
+.size-selector {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.size-btn {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.size-btn.active {
+  background: var(--dark-green);
+  color: white;
+}
+
+/* Algo Section */
+.algo-section { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; margin-top: 32px; box-shadow: var(--shadow); }
+.concept-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+.concept-card { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+.concept-card h4 { font-size: 13px; margin-bottom: 4px; }
+.concept-card p { font-size: 11px; color: var(--muted); }
+
+.logs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.log-box { background: #17211c; color: #e6eee8; border-radius: 14px; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.6; height: 210px; overflow-y: auto; }
+.log-box .ok { color: var(--green); font-weight: 700; }
+.log-box .warn { color: #ffcc7a; }
+.log-box .dim { color: #88998e; }
+
+/* PANEL KERANJANG POJOK KANAN */
+.cart-drawer {
+  position: fixed;
+  top: 0; right: -480px;
+  width: 100%; max-width: 440px;
+  height: 100vh;
+  background: var(--card);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.2);
+  z-index: 200;
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.cart-drawer.open { right: 0; }
+.cart-drawer-header {
+  padding: 16px 20px;
+  background: var(--dark-green);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+.cart-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+}
+.cart-item img {
+  width: 48px; height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.address-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--bg);
+  position: relative;
+  margin-bottom: 10px;
+}
+.address-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.btn-edit-addr {
+  background: var(--dark-green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.section-divider {
+  border-top: 1px dashed var(--line);
+  margin: 14px 0;
+  padding-top: 12px;
+}
+
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 3px; color: var(--ink-light); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.cart-drawer-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.overlay.active { opacity: 1; pointer-events: auto; }
+
+@media(max-width: 850px) {
+  .hero { grid-template-columns: 1fr; }
+  .logs-grid, .concept-grid { grid-template-columns: 1fr; }
+  .cart-drawer { max-width: 100%; right: -100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- Flash Sale Timer Banner -->
+<div class="flash-sale-banner">
+  <span>🔥 FLASH SALE HARI INI! Diskon hingga 20% + Bebas Ongkir</span>
+  <span class="timer-badge" id="flashTimer">02:45:12</span>
+</div>
+
+<header>
+  <div class="header-container">
+    <a href="#" class="logo">SOLE<span>VA.</span></a>
+    <div class="header-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Mode Gelap</button>
+      <button class="cart-btn" id="openCartBtn">
+        🛒 Keranjang
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <span class="hero-tag">Koleksi Spesial 2026</span>
+      <h1>Langkah Nyaman,<br><span>Gaya Maksimal.</span></h1>
+      <p>Pilih sepatu pilihanmu, sesuaikan ukuran, lalu konfirmasi pesanan secara instan di keranjang pojok kanan.</p>
+      <button class="btn btn-accent" onclick="document.getElementById('searchInput').focus()">Cari Katalog</button>
+    </div>
+    <div>
+      <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=80" alt="Nike Red Sneakers" class="hero-img">
+    </div>
+  </section>
+
+  <!-- Controls Card -->
+  <section class="controls-card">
+    <div class="search-row">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari nama atau kode sepatu (misal: Urban, SP001)...">
+        <button class="btn btn-primary" id="searchBtn">Cari (Linear Search)</button>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <select id="sortOrder" style="padding:8px 12px; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-size:12px;">
+          <option value="asc">Harga: Termurah → Termahal</option>
+          <option value="desc">Harga: Termahal → Termurah</option>
+        </select>
+        <button class="btn btn-accent" id="sortBtn">Urutkan (Bubble Sort)</button>
+        <button class="btn btn-secondary" id="resetBtn">Reset Data</button>
+      </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="category-pills">
+      <button class="pill-btn active" onclick="filterCategory('All', this)">Semua</button>
+      <button class="pill-btn" onclick="filterCategory('Running', this)">🏃 Running</button>
+      <button class="pill-btn" onclick="filterCategory('Casual', this)">👟 Casual</button>
+      <button class="pill-btn" onclick="filterCategory('Sneakers', this)">🔥 Sneakers</button>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="products-grid" id="productGrid"></section>
+
+  <!-- Data Structure & Algorithm Log Panel -->
+  <section class="algo-section">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3>⚡ Visualizer Struktur Data &amp; Log Algoritma</h3>
+      <button class="btn btn-secondary" onclick="clearLogs()">Clear Log</button>
+    </div>
+
+    <!-- Modul Konsep Array, Pointer, Struct -->
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h4>0a. Array &amp; Struct</h4>
+        <p>Data sepatu disimpan di <code>products[]</code> berstruktur struct (<code>kode</code>, <code>nama</code>, <code>harga</code>, <code>stok</code>, <code>kategori</code>).</p>
+      </div>
+      <div class="concept-card">
+        <h4>0b. Pointer Concept</h4>
+        <p>Manipulasi objek JavaScript menggunakan referensi alamat memori variabel untuk pembaruan kupon &amp; keranjang.</p>
+      </div>
+      <div class="concept-card">
+        <h4>0c. Sorting &amp; Searching</h4>
+        <p>Mendukung Bubble Sort log dan Linear Search log secara dinamis.</p>
+      </div>
+    </div>
+
+    <!-- Logs Grid -->
+    <div class="logs-grid">
+      <div>
+        <h5 style="margin-bottom:6px;">1. Log Sorting (Bubble Sort)</h5>
+        <div class="log-box" id="sortLog"><span class="dim">// Klik "Urutkan (Bubble Sort)" untuk melihat log...</span></div>
+      </div>
+      <div>
+        <h5 style="margin-bottom:6px;">2. Log Searching (Linear Search)</h5>
+        <div class="log-box" id="searchLog"><span class="dim">// Ketik nama lalu klik "Cari" untuk melihat log...</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- PANEL KERANJANG DI POJOK KANAN -->
+<div class="overlay" id="overlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer-header">
+    <h3 style="font-size:15px;">🛒 Keranjang Belanja Anda</h3>
+    <button style="background:none; border:none; color:white; font-size:20px; cursor:pointer;" id="closeCartBtn">✕</button>
+  </div>
+  
+  <div class="cart-drawer-body">
+    <!-- Item Dipilih -->
+    <h4 style="font-size: 12px; margin-bottom: 8px;">Item Dipilih:</h4>
+    <div id="cartItems">
+      <p style="color:var(--muted); text-align:center; margin:20px 0; font-size:12px;">Keranjang Anda masih kosong.</p>
+    </div>
+
+    <!-- Kode Kupon Diskon -->
+    <div class="section-divider">
+      <h5 style="font-size:11px; font-weight:700; margin-bottom:4px;">🏷️ Punya Kode Kupon?</h5>
+      <p style="font-size:10px; color:var(--muted); margin-bottom:6px;">Coba: <b>DISCOUNT10</b>, <b>SOLEVA20</b>, atau <b>FREESHIP</b></p>
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="couponInput" placeholder="Kode kupon..." style="text-transform:uppercase; font-size:12px;">
+        <button class="btn btn-primary" onclick="applyCoupon()" style="padding:6px 12px; font-size:11px;">Gunakan</button>
+      </div>
+      <div id="couponMsg" style="font-size:10px; margin-top:4px;"></div>
+    </div>
+
+    <!-- Alamat Pengiriman + Tombol Edit -->
+    <div class="section-divider">
+      <div class="address-card">
+        <div class="address-card-header">
+          <h5 style="font-size:11px;">📍 Alamat Pengiriman:</h5>
+          <button class="btn-edit-addr" onclick="focusAddressEdit()">✏️ Edit</button>
+        </div>
+        <p id="displayAddressText" style="color:var(--ink-light); font-size:10px; line-height:1.4;">
+          <b><span id="displayNama">Budi Santoso</span></b> (<span id="displayPhone">0812-3456-7890</span>)<br>
+          <span id="displayAddress">Jl. Pemuda No. 45, Genteng, Surabaya, 60271</span>
+        </p>
+      </div>
+
+      <!-- Form Edit Alamat -->
+      <div style="background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:8px; margin-top:6px;">
+        <h5 style="font-size:10px; font-weight:700; margin-bottom:6px; color:var(--green);">Edit Informasi Penerima:</h5>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nama Penerima</label>
+            <input type="text" id="shipName" placeholder="Nama Lengkap" value="Budi Santoso" oninput="updateAddressPreview()">
+          </div>
+          <div class="form-group">
+            <label>No. Telepon / WA</label>
+            <input type="tel" id="shipPhone" placeholder="08123456789" value="0812-3456-7890" oninput="updateAddressPreview()">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Alamat Lengkap</label>
+          <textarea id="shipAddress" rows="2" placeholder="Nama Jalan, No. Rumah..." oninput="updateAddressPreview()">Jl. Pemuda No. 45, Genteng, Surabaya, 60271</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Layanan Kurir</label>
+          <select id="courierSelect" onchange="updateShippingCost()">
+            <option value="15000">Reguler - J&amp;T / JNE (Rp 15.000)</option>
+            <option value="25000">Instant - GoSend / Grab (Rp 25.000)</option>
+            <option value="35000">Next Day - Express (Rp 35.000)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Metode Pembayaran</label>
+          <select id="paymentMethod">
+            <option>QRIS (GoPay, OVO, ShopeePay, DANA)</option>
+            <option>Virtual Account BCA / Mandiri</option>
+            <option>COD (Bayar di Tempat)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Keranjang & Tombol Konfirmasi -->
+  <div class="cart-drawer-footer">
+    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
+      <span>Subtotal Produk:</span>
+      <span id="subtotalVal">Rp 0</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px; color:#10b981;">
+      <span>Diskon Promo:</span>
+      <span id="discountVal">- Rp 0</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+      <span>Ongkos Kirim:</span>
+      <span id="shippingVal">Rp 15.000</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-weight:800; font-size:14px; margin-bottom:8px; color:var(--green);">
+      <span>Total Bayar:</span>
+      <span id="grandTotalVal">Rp 15.000</span>
+    </div>
+    <button class="btn btn-accent" style="width:100%; padding:10px; font-size:12px;" onclick="processOrder()">
+      🚀 Konfirmasi &amp; Bayar Sekarang
+    </button>
+  </div>
+</div>
+
+<script>
+
+/* ==========================================================================
+   🟢 0. MATERI PRESENTASI: ARRAY & STRUCT DATA PRODUK
+   ========================================================================== */
+
+// Array 'rawProducts' yang menyimpan kumpulan Objek/Struct produk sepatu
+const rawProducts = [
+  // --- KATEGORI: CASUAL ---
+  { kode: "SP001", nama: "Urban Classic", harga: 389000, stok: 12, kategori: "Casual", rating: "⭐ 4.8", img: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500&q=80", sizes: [39, 40, 41, 42] },
+  { kode: "SP003", nama: "Daily Canvas", harga: 279000, stok: 15, kategori: "Casual", rating: "⭐ 4.7", img: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=500&q=80", sizes: [38, 39, 40, 41] },
+  { kode: "SP007", nama: "Minimalist Low", harga: 319000, stok: 9, kategori: "Casual", rating: "⭐ 4.6", img: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&q=80", sizes: [39, 40, 41, 42] },
+  { kode: "SP008", nama: "Loafer Flex", harga: 369000, stok: 6, kategori: "Casual", rating: "⭐ 4.8", img: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=500&q=80", sizes: [40, 41, 42, 43] },
+
+  // --- KATEGORI: RUNNING ---
+  { kode: "SP002", nama: "Velocity Run", harga: 459000, stok: 3, kategori: "Running", rating: "⭐ 4.9", img: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500&q=80", sizes: [40, 41, 42, 43] },
+  { kode: "SP006", nama: "Trail Active", harga: 499000, stok: 2, kategori: "Running", rating: "⭐ 5.0", img: "https://images.unsplash.com/photo-1539185441755-769473a23570?w=500&q=80", sizes: [40, 42, 43, 44] },
+  { kode: "SP009", nama: "Zoom Fly Pro", harga: 529000, stok: 7, kategori: "Running", rating: "⭐ 4.9", img: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=500&q=80", sizes: [39, 40, 41, 42] },
+  { kode: "SP010", nama: "Ultra Cushion", harga: 489000, stok: 5, kategori: "Running", rating: "⭐ 4.8", img: "https://images.unsplash.com/photo-1460353581641-37babbab0fa2?w=500&q=80", sizes: [41, 42, 43, 44] },
+
+  // --- KATEGORI: SNEAKERS ---
+  { kode: "SP004", nama: "Street Form", harga: 429000, stok: 4, kategori: "Sneakers", rating: "⭐ 4.6", img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=500&q=80", sizes: [41, 42, 43, 44] },
+  { kode: "SP005", nama: "Cloud Step", harga: 349000, stok: 10, kategori: "Sneakers", rating: "⭐ 4.9", img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500&q=80", sizes: [39, 40, 41, 42] },
+  { kode: "SP011", nama: "Retro High OG", harga: 589000, stok: 4, kategori: "Sneakers", rating: "⭐ 5.0", img: "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=500&q=80", sizes: [40, 41, 42, 43] },
+  { kode: "SP012", nama: "Air Street Low", harga: 419000, stok: 8, kategori: "Sneakers", rating: "⭐ 4.7", img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=500&q=80", sizes: [39, 40, 41, 42] }
+];
+
+let products = rawProducts.map(p => ({...p}));
+let cart = [];
+let wishlists = new Set();
+let selectedSizes = {};
+let activeCategory = "All";
+let shippingCost = 15000;
+let discountAmount = 0;
+
+const formatRupiah = (num) => "Rp " + num.toLocaleString("id-ID");
+
+
+/* ==========================================================================
+   🔵 0b. MATERI PRESENTASI: POINTER CONCEPT (PASS-BY-REFERENCE)
+   ========================================================================== */
+
+// Fungsi untuk menambah produk ke keranjang belanja
+function addToCart(kode) {
+  // Variabel 'product' memegang referensi pointer ke objek asli dalam array 'products'
+  const product = products.find(p => p.kode === kode);
+  if (!product) return;
+
+  const size = selectedSizes[kode] || product.sizes[0];
+  const cartKey = `${kode}-${size}`;
+
+  // Variabel 'item' mengacu pada referensi objek di dalam array 'cart'
+  const item = cart.find(i => i.cartKey === cartKey);
+  if (item) { 
+    item.qty++; // Mengubah nilai objek secara langsung melalui referensi pointer
+  } else { 
+    cart.push({ ...product, size: size, cartKey: cartKey, qty: 1 }); 
+  }
+
+  updateCartUI();
+  openCart();
+}
+
+
+/* ==========================================================================
+   🟡 1. MATERI PRESENTASI: SORTING (BUBBLE SORT & LOG)
+   ========================================================================== */
+
+document.getElementById("sortBtn").addEventListener("click", () => {
+  const order = document.getElementById("sortOrder").value;
+  let arr = products.slice();
+  let logs = [`<span class="ok">▶ Memulai Bubble Sort</span>`];
+
+  // Algoritma Utama Bubble Sort
+  for (let i = 0; i < arr.length - 1; i++) {
+    for (let j = 0; j < arr.length - 1 - i; j++) {
+      let swapNeeded = order === 'asc' ? arr[j].harga > arr[j+1].harga : arr[j].harga < arr[j+1].harga;
+      
+      // Pertukaran nilai (Swap)
+      if (swapNeeded) {
+        let temp = arr[j]; 
+        arr[j] = arr[j+1]; 
+        arr[j+1] = temp;
+        
+        // Mencatat log pertukaran data secara langsung
+        logs.push(`<span class="warn">⇄ Tukar: ${arr[j].nama} ↔ ${arr[j+1].nama}</span>`);
+      }
+    }
+  }
+
+  products = arr;
+  renderProducts(products); // Render ulang produk terurut
+  logs.push(`<span class="ok">✔ Sorting Selesai!</span>`);
+  writeLog("sortLog", logs); // Tampilkan log ke layar
+});
+
+
+/* ==========================================================================
+   🟣 2. MATERI PRESENTASI: SEARCHING (LINEAR SEARCH & LOG)
+   ========================================================================== */
+
+function runLinearSearch() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  if (!q) { 
+    renderProducts(products); 
+    writeLog("searchLog", [`<span class="dim">// Menampilkan seluruh produk.</span>`]);
+    return; 
+  }
+
+  let logs = [`<span class="ok">▶ Memulai Linear Search: "${q}"</span>`];
+  let matched = [];
+
+  // Algoritma Linear Search: Memeriksa indeks 0 sampai n-1 secara berurutan
+  for (let i = 0; i < products.length; i++) {
+    logs.push(`Memeriksa indeks [${i}]: ${products[i].nama}`);
+    
+    // Pencocokan Nama atau Kode Sepatu
+    if (products[i].nama.toLowerCase().includes(q) || products[i].kode.toLowerCase().includes(q)) {
+      logs.push(`<span class="ok">✔ Ditemukan di indeks [${i}]: ${products[i].nama} (${products[i].kode})</span>`);
+      matched.push(products[i]);
+    }
+  }
+
+  if (matched.length === 0) {
+    logs.push(`<span class="warn">✖ Tidak ada produk yang cocok dengan "${q}".</span>`);
+  } else {
+    logs.push(`<span class="ok">✔ Pencarian Selesai. Ditemukan ${matched.length} data.</span>`);
+  }
+
+  renderProducts(matched);   // Render produk hasil pencarian
+  writeLog("searchLog", logs); // Tampilkan log pencarian ke layar
+}
+
+
+/* ==========================================================================
+   ⚙️ FUNGSI PENDUKUNG LAINNYA (RENDER, UI, BANNER, CART)
+   ========================================================================== */
+
+function renderProducts(items = products) {
+  const grid = document.getElementById("productGrid");
+  
+  let filtered = items;
+  if (activeCategory !== "All") {
+    filtered = items.filter(p => p.kategori === activeCategory);
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted);">Produk tidak ditemukan.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p => {
+    const currentSize = selectedSizes[p.kode] || p.sizes[0];
+    const isWishlist = wishlists.has(p.kode);
+    const isLowStock = p.stok <= 5;
+
+    return `
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <span class="product-code">${p.kode}</span>
+          ${isLowStock ? `<span class="stock-badge">🔥 Stok Tinggal ${p.stok}!</span>` : ''}
+          <button class="wishlist-btn ${isWishlist ? 'active' : ''}" onclick="toggleWishlist('${p.kode}')">
+            ${isWishlist ? '❤️' : '🤍'}
+          </button>
+          <img src="${p.img}" alt="${p.nama}" class="product-img">
+        </div>
+        <div class="product-info">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+            <span class="product-category">${p.kategori}</span>
+            <span style="font-size:11px; font-weight:700; color:#f59e0b;">${p.rating}</span>
+          </div>
+          <h3 class="product-title">${p.nama}</h3>
+          <div class="product-price">${formatRupiah(p.harga)}</div>
+          
+          <div style="font-size:10px; font-weight:700; margin-bottom:4px; color:var(--muted);">Pilih Ukuran (EU):</div>
+          <div class="size-selector">
+            ${p.sizes.map(sz => `
+              <button class="size-btn ${sz === currentSize ? 'active' : ''}" onclick="selectSize('${p.kode}', ${sz})">${sz}</button>
+            `).join('')}
+          </div>
+
+          <button class="btn btn-primary" onclick="addToCart('${p.kode}')">+ Keranjang</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function selectSize(kode, size) {
+  selectedSizes[kode] = size;
+  renderProducts();
+}
+
+function toggleWishlist(kode) {
+  if (wishlists.has(kode)) { wishlists.delete(kode); } else { wishlists.add(kode); }
+  renderProducts();
+}
+
+function filterCategory(cat, btn) {
+  activeCategory = cat;
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts();
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  document.getElementById("themeBtn").textContent = isDark ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+}
+
+// Flash Sale Timer
+let secondsLeft = 9912;
+setInterval(() => {
+  if (secondsLeft > 0) secondsLeft--;
+  const h = String(Math.floor(secondsLeft / 3600)).padStart(2, '0');
+  const m = String(Math.floor((secondsLeft % 3600) / 60)).padStart(2, '0');
+  const s = String(secondsLeft % 60).padStart(2, '0');
+  document.getElementById("flashTimer").textContent = `${h}:${m}:${s}`;
+}, 1000);
+
+function updateCartUI() {
+  const cartItems = document.getElementById("cartItems");
+  const cartCount = document.getElementById("cartCount");
+  const subtotalVal = document.getElementById("subtotalVal");
+  const discountVal = document.getElementById("discountVal");
+  const shippingVal = document.getElementById("shippingVal");
+  const grandTotalVal = document.getElementById("grandTotalVal");
+
+  const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+  const subtotal = cart.reduce((sum, i) => sum + (i.harga * i.qty), 0);
+  const grandTotal = Math.max(0, subtotal - discountAmount + shippingCost);
+
+  cartCount.textContent = totalQty;
+  subtotalVal.textContent = formatRupiah(subtotal);
+  discountVal.textContent = "- " + formatRupiah(discountAmount);
+  shippingVal.textContent = formatRupiah(shippingCost);
+  grandTotalVal.textContent = formatRupiah(grandTotal);
+
+  if (cart.length === 0) {
+    cartItems.innerHTML = `<p style="color:var(--muted); text-align:center; margin:20px 0; font-size:12px;">Keranjang Anda masih kosong.</p>`;
+  } else {
+    cartItems.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <img src="${item.img}" alt="${item.nama}">
+        <div style="flex:1;">
+          <div style="font-weight:700; font-size:12px;">${item.nama}</div>
+          <div style="font-size:10px; color:var(--muted);">Size: <b>${item.size}</b> | ${formatRupiah(item.harga)} x ${item.qty}</div>
+        </div>
+        <button class="btn btn-secondary" style="padding: 2px 6px; font-size:10px;" onclick="removeFromCart('${item.cartKey}')">✕</button>
+      </div>
+    `).join("");
+  }
+}
+
+function applyCoupon() {
+  const code = document.getElementById("couponInput").value.trim().toUpperCase();
+  const msg = document.getElementById("couponMsg");
+  const subtotal = cart.reduce((sum, i) => sum + (i.harga * i.qty), 0);
+
+  if (cart.length === 0) {
+    msg.innerHTML = `<span style="color:var(--danger);">Pilih produk ke keranjang dulu.</span>`;
+    return;
+  }
+
+  if (code === "DISCOUNT10") {
+    discountAmount = subtotal * 0.10;
+    msg.innerHTML = `<span style="color:#10b981;">✔ Kupon DISCOUNT10 (Diskon 10%)</span>`;
+  } else if (code === "SOLEVA20") {
+    discountAmount = subtotal * 0.20;
+    msg.innerHTML = `<span style="color:#10b981;">✔ Kupon SOLEVA20 (Diskon 20%)</span>`;
+  } else if (code === "FREESHIP") {
+    discountAmount = shippingCost;
+    msg.innerHTML = `<span style="color:#10b981;">✔ Kupon FREESHIP (Gratis Ongkir)</span>`;
+  } else {
+    discountAmount = 0;
+    msg.innerHTML = `<span style="color:var(--danger);">✖ Kode kupon tidak valid.</span>`;
+  }
+
+  updateCartUI();
+}
+
+function updateAddressPreview() {
+  const name = document.getElementById("shipName").value.trim() || "Budi Santoso";
+  const phone = document.getElementById("shipPhone").value.trim() || "0812-3456-7890";
+  const address = document.getElementById("shipAddress").value.trim() || "Jl. Pemuda No. 45, Genteng, Surabaya, 60271";
+
+  document.getElementById("displayNama").textContent = name;
+  document.getElementById("displayPhone").textContent = phone;
+  document.getElementById("displayAddress").textContent = address;
+}
+
+function focusAddressEdit() {
+  const nameInput = document.getElementById("shipName");
+  nameInput.focus();
+  nameInput.select();
+}
+
+function updateShippingCost() {
+  shippingCost = parseInt(document.getElementById("courierSelect").value);
+  updateCartUI();
+}
+
+function removeFromCart(cartKey) {
+  cart = cart.filter(i => i.cartKey !== cartKey);
+  updateCartUI();
+}
+
+function processOrder() {
+  if (cart.length === 0) {
+    alert("Keranjang Anda masih kosong. Silakan pilih produk terlebih dahulu.");
+    return;
+  }
+  const name = document.getElementById("displayNama").textContent;
+  alert(`🎉 Pesanan Berhasil Dibuat!\n\nAtas nama: ${name}\nTerima kasih telah berbelanja di SOLEVA.`);
+  cart = [];
+  discountAmount = 0;
+  document.getElementById("couponInput").value = "";
+  document.getElementById("couponMsg").innerHTML = "";
+  updateCartUI();
+  closeCart();
+}
+
+// Drawer Handling
+const cartDrawer = document.getElementById("cartDrawer");
+const overlay = document.getElementById("overlay");
+
+function openCart() { cartDrawer.classList.add("open"); overlay.classList.add("active"); }
+function closeCart() { cartDrawer.classList.remove("open"); overlay.classList.remove("active"); }
+
+document.getElementById("openCartBtn").addEventListener("click", openCart);
+document.getElementById("closeCartBtn").addEventListener("click", closeCart);
+overlay.addEventListener("click", closeCart);
+
+function writeLog(targetId, logs) {
+  document.getElementById(targetId).innerHTML = logs.map(l => `<div>${l}</div>`).join("");
+}
+
+document.getElementById("searchBtn").addEventListener("click", runLinearSearch);
+document.getElementById("searchInput").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") runLinearSearch();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  products = rawProducts.map(p => ({...p}));
+  document.getElementById("searchInput").value = "";
+  activeCategory = "All";
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.pill-btn').classList.add('active');
+  renderProducts(products);
+  writeLog("sortLog", [`<span class="dim">// Log dibersihkan.</span>`]);
+  writeLog("searchLog", [`<span class="dim">// Log dibersihkan.</span>`]);
+});
+
+function clearLogs() {
+  writeLog("sortLog", [`<span class="dim">// Log dibersihkan.</span>`]);
+  writeLog("searchLog", [`<span class="dim">// Log dibersihkan.</span>`]);
+}
+
+renderProducts();
+</script>
+</body>
+</html>
